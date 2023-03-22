@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Live-Coding-2</title>
+  </head>
+  <body>
+    <h1>Reto API</h1>
+    <label for="pregunta">Pregunta:</label>
+    <input type="text" id="pregunta">
+    <button id="submit">Enviar</button>
+    <div id="respuesta"></div>
+
+    <script>
+      const apiUrl = 'https://yesno.wtf/api';
+
+      function fetchRespuesta() {
+        const pregunta = document.getElementById('pregunta').value;
+
+        // Realiza una petición al API
+        fetch(apiUrl)
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error('Error en la solicitud');
+            }
+          })
+          .then(data => {
+            // Muestra la respuesta del API en el HTML
+            const respuestaDiv = document.getElementById('respuesta');
+            respuestaDiv.innerHTML = `
+              <p>${pregunta}</p>
+              <img src="${data.image}">
+              <p>${data.respuesta}</p>
+            `;
+
+            // Limpia la pregunta y la respuesta despues de 5 segundos.
+            setTimeout(() => {
+              document.getElementById('pregunta').value = '';
+              respuestaDiv.innerHTML = '';
+            }, 5000);
+          })
+          .catch(error => {
+            // Maneja cualquier error de la solicitud
+            console.error(error);
+          });
+      }
+
+      // Agrega la función fetchRespuesta a un eventListener, para que sea disparado cuando se de click al botón.
+      const submitButton = document.getElementById('submit');
+      submitButton.addEventListener('click', fetchRespuesta);
+    </script>
+  </body>
+</html>
